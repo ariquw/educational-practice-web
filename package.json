@@ -1,0 +1,26 @@
+{
+  "name": "educational-practice-web",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ariquw/educational-practice-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ariquw/educational-practice-web/issues"
+  },
+  "homepage": "https://github.com/ariquw/educational-practice-web#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "sqlite3": "^6.0.1"
+  }
+}
