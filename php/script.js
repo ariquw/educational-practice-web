@@ -17,7 +17,7 @@ function showPage(name) {
 document.getElementById('form-register').addEventListener('submit', async (e) => {
     e.preventDefault();
     var data = Object.fromEntries(new FormData(e.target));
-    var res = await fetch('/api/register', {
+    var res = await fetch('api.php?action=register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -29,7 +29,7 @@ document.getElementById('form-register').addEventListener('submit', async (e) =>
 document.getElementById('form-login').addEventListener('submit', async (e) => {
     e.preventDefault();
     var data = Object.fromEntries(new FormData(e.target));
-    var res = await fetch('/api/login', {
+    var res = await fetch('api.php?action=login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -47,7 +47,7 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
 });
 
 async function logout() {
-    await fetch('/api/logout', { method: 'POST' });
+    await fetch('api.php?action=logout', { method: 'POST' });
     document.getElementById('nav').style.display = 'none';
     showPage('login');
 }
@@ -55,7 +55,7 @@ async function logout() {
 document.getElementById('form-add').addEventListener('submit', async (e) => {
     e.preventDefault();
     var data = Object.fromEntries(new FormData(e.target));
-    var res = await fetch('/api/add', {
+    var res = await fetch('api.php?action=add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -70,7 +70,7 @@ document.getElementById('form-add').addEventListener('submit', async (e) => {
 document.getElementById('form-cancel').addEventListener('submit', async (e) => {
     e.preventDefault();
     var reason = e.target.cancel_reason.value;
-    await fetch('/api/status', {
+    await fetch('api.php?action=status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: cancelId, status: 'Услуга отменена', cancel_reason: reason })
@@ -81,7 +81,7 @@ document.getElementById('form-cancel').addEventListener('submit', async (e) => {
 });
 
 async function loadOrders() {
-    var res = await fetch('/api/orders');
+    var res = await fetch('api.php?action=orders');
     var data = await res.json();
     var container = document.getElementById('orders-list');
 
@@ -94,7 +94,7 @@ async function loadOrders() {
 
     for (var i = 0; i < data.orders.length; i++) {
         var o = data.orders[i];
-        var sc = o.status === 'Новая заявка' ? 'status-new' : o.status === 'Услуга оказана' ? 'status-done' : 'status-cancel';
+        var sc = o.status === 'Новая заявка' ? 's-new' : o.status === 'Услуга оказана' ? 's-done' : 's-cancel';
 
         html += '<div class="card">';
         if (data.role === 'admin') {
@@ -120,7 +120,7 @@ async function loadOrders() {
 }
 
 async function changeStatus(id, status) {
-    await fetch('/api/status', {
+    await fetch('api.php?action=status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, status: status })

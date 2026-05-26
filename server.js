@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const session = require('express-session');
 
 const app = express();
-const db = new sqlite3.Database('database.db');
+const db = new sqlite3.Database('orders.db');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +42,9 @@ app.post('/api/register', (req, res) => {
     db.run('INSERT INTO users (login, password, name, phone, email) VALUES (?, ?, ?, ?, ?)',
         [login, password, name, phone, email],
         function(err) {
-            if (err) return res.json({ success: false });
+            if (err) {
+                return res.json({ success: false });
+            }
             res.json({ success: true });
         }
     );
@@ -55,7 +57,9 @@ app.post('/api/login', (req, res) => {
         return res.json({ success: true, role: 'admin' });
     }
     db.get('SELECT * FROM users WHERE login = ? AND password = ?', [login, password], (err, user) => {
-        if (!user) return res.json({ success: false });
+        if (!user) {
+            return res.json({ success: false });
+        }
         req.session.user = { id: user.id, role: 'user', name: user.name };
         res.json({ success: true, role: 'user' });
     });
@@ -74,7 +78,9 @@ app.post('/api/add', (req, res) => {
     db.run('INSERT INTO orders (user_id, address, contact, service_type, desired_date, desired_time, payment_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [req.session.user.id, address, contact, service_type, desired_date, desired_time, payment_type],
         function(err) {
-            if (err) return res.json({ success: false });
+            if (err){
+                return res.json({ success: false });
+            }
             res.json({ success: true });
         }
     );
@@ -87,16 +93,16 @@ app.get('/api/orders', (req, res) => {
     let params = [];
 
     if (req.session.user.role === 'admin') {
-        query = `SELECT orders.*, users.name as user_name FROM orders 
-                 JOIN users ON orders.user_id = users.id 
-                 ORDER BY orders.id DESC`;
+        query = `SELECT orders.*, users.name as user_name FROM orders JOIN users ON orders.user_id = users.id ORDER BY orders.id DESC`;
     } else {
         query = 'SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC';
         params = [req.session.user.id];
     }
 
     db.all(query, params, (err, orders) => {
-        if (err) return res.json({ success: false });
+        if (err) {
+            return res.json({ success: false });
+        }
         res.json({ orders: orders, role: req.session.user.role });
     });
 });
@@ -109,7 +115,9 @@ app.post('/api/status', (req, res) => {
     db.run('UPDATE orders SET status = ?, cancel_reason = ? WHERE id = ?',
         [status, cancel_reason || null, id],
         function(err) {
-            if (err) return res.json({ success: false });
+            if (err) {
+                return res.json({ success: false });
+            }
             res.json({ success: true });
         }
     );
