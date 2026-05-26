@@ -23,7 +23,9 @@ document.getElementById('form-register').addEventListener('submit', async (e) =>
         body: JSON.stringify(data)
     });
     var result = await res.json();
-    if (result.success) showPage('login');
+    if (result.success) {
+        showPage('login');
+    }
 });
 
 document.getElementById('form-login').addEventListener('submit', async (e) => {
